@@ -1,7 +1,7 @@
-import { useRef } from 'react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import FloatingBadge from '../components/FloatingBadge';
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import FloatingBadge from "../components/FloatingBadge";
 
 const Hero = () => {
   const heroRef = useRef(null);
@@ -19,11 +19,11 @@ const Hero = () => {
       tl.fromTo(
         yearRef.current,
         { y: 30, opacity: 0, scale: 0.8 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.7)' }
+        { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.7)" }
       );
 
       // Title reveal - character by character
-      const chars = titleRef.current?.querySelectorAll('.hero-char');
+      const chars = titleRef.current?.querySelectorAll(".hero-char");
       if (chars) {
         tl.fromTo(
           chars,
@@ -34,15 +34,15 @@ const Hero = () => {
             rotationX: 0,
             duration: 0.8,
             stagger: 0.05,
-            ease: 'back.out(1.5)',
+            ease: "back.out(1.5)",
           },
-          '-=0.3'
+          "-=0.3"
         );
       }
 
       // Badges stagger
       tl.fromTo(
-        '.hero-badge',
+        ".hero-badge",
         { y: 40, opacity: 0, scale: 0.5 },
         {
           y: 0,
@@ -50,18 +50,23 @@ const Hero = () => {
           scale: 1,
           duration: 0.6,
           stagger: 0.12,
-          ease: 'back.out(2)',
+          ease: "back.out(2)",
         },
-        '-=0.4'
+        "-=0.4"
       );
-
 
       // Flower
       tl.fromTo(
         flowerRef.current,
         { scale: 0, rotation: 90, opacity: 0 },
-        { scale: 1, rotation: 0, opacity: 1, duration: 0.6, ease: 'back.out(2)' },
-        '-=0.6'
+        {
+          scale: 1,
+          rotation: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: "back.out(2)",
+        },
+        "-=0.6"
       );
 
       // // Admin button
@@ -77,7 +82,7 @@ const Hero = () => {
         y: -20,
         rotation: 10,
         duration: 3,
-        ease: 'sine.inOut',
+        ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
         delay: 4,
@@ -88,7 +93,7 @@ const Hero = () => {
         y: -15,
         rotation: -15,
         duration: 2.5,
-        ease: 'sine.inOut',
+        ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
         delay: 4.2,
@@ -98,7 +103,7 @@ const Hero = () => {
       gsap.to(adminRef.current, {
         y: -8,
         duration: 2,
-        ease: 'sine.inOut',
+        ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
         delay: 4.5,
@@ -107,22 +112,28 @@ const Hero = () => {
     { scope: heroRef }
   );
 
-  const titleText = 'portFolio';
+  const titleText = "portFolio";
 
   return (
     <section
       id="hero"
       ref={heroRef}
       className="section-container flex items-center justify-center relative"
-      style={{ minHeight: '100vh' }}
+      style={{ minHeight: "100vh" }}
     >
       {/* Main content */}
       <div className="relative z-10 text-center px-4">
         {/* Year */}
-        <div ref={yearRef} className="mb-3 md:mb-4 opacity-0 md:-translate-x-[32%]">
+        <div
+          ref={yearRef}
+          className="mb-3 md:mb-4 opacity-0 md:-translate-x-[32%]"
+        >
           <span
             className="text-neon-green text-2xl sm:text-3xl md:text-5xl font-bold tracking-wide"
-            style={{ fontFamily: 'var(--font-family-pixel)', textShadow: '0 0 20px rgba(190, 255, 70, 0.5)' }}
+            style={{
+              fontFamily: "var(--font-family-pixel)",
+              textShadow: "0 0 20px rgba(190, 255, 70, 0.5)",
+            }}
           >
             {new Date().getFullYear()}
           </span>
@@ -132,15 +143,18 @@ const Hero = () => {
         <h1
           ref={titleRef}
           className="text-[2.25rem] sm:text-6xl md:text-7xl lg:text-[5.3rem] xl:text-[6.4rem] font-bold leading-[0.95] tracking-[-0.04em] whitespace-normal sm:whitespace-nowrap"
-          style={{ fontFamily: 'var(--font-family-pixel)', perspective: '800px' }}
+          style={{
+            fontFamily: "var(--font-family-pixel)",
+            perspective: "800px",
+          }}
         >
-          {titleText.split('').map((char, i) => (
+          {titleText.split("").map((char, i) => (
             <span
               key={i}
               className="hero-char inline-block opacity-0 text-white"
               style={{
                 textShadow:
-                  '0 0 30px rgba(255,255,255,0.1), 0 0 60px rgba(139, 92, 246, 0.1)',
+                  "0 0 30px rgba(255,255,255,0.1), 0 0 60px rgba(139, 92, 246, 0.1)",
               }}
             >
               {char}
@@ -151,13 +165,27 @@ const Hero = () => {
         {/* Floating badges */}
         <div className="flex flex-wrap items-center justify-center gap-2.5 md:gap-3 mt-6 md:mt-7">
           <div className="hero-badge opacity-0">
-            <FloatingBadge className="p-6" text="UX-UI Design" color="pink" icon="🌸" delay={0.2} />
+            {/* <FloatingBadge
+              text="UX-UI Design"
+              color="pink"
+              icon="🌸"
+              delay={0.2}
+            /> */}
+            <FloatingBadge
+              text="UX-UI Design"
+              color="pink"
+              delay={0.2}
+            />
           </div>
           <div className="hero-badge opacity-0">
-            <FloatingBadge className="p-6" text="Branding" color="green" delay={0.4} />
+            <FloatingBadge text="Branding" color="green" delay={0.4} />
           </div>
           <div className="hero-badge opacity-0">
-            <FloatingBadge className="p-6" text="By Umme Kulsum Suriya" color="purple" delay={0.6} />
+            <FloatingBadge
+              text="By Umme Kulsum Suriya"
+              color="purple"
+              delay={0.6}
+            />
           </div>
         </div>
       </div>
@@ -177,7 +205,7 @@ const Hero = () => {
       {/* Floating flower */}
       <div
         ref={flowerRef}
-        className="absolute bottom-[31%] left-[6%] md:bottom-[35%] md:left-[18%] z-1 text-3xl md:text-5xl opacity-0 select-none"
+        className="absolute bottom-[31%] left-[6%] md:bottom-[35%] md:left-[18%] z-10 text-3xl md:text-5xl opacity-0 select-none"
         data-cursor-text="✿"
       >
         🌸
@@ -202,7 +230,6 @@ const Hero = () => {
           </svg>
         </div>
       </div> */}
-
     </section>
   );
 };
