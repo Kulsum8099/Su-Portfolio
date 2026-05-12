@@ -81,7 +81,7 @@ const FloatingBadge = ({
   return (
     <div
       ref={badgeRef}
-      className={`inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-[14px] text-sm md:text-[1.55rem] leading-none font-semibold select-none will-change-transform ${className}`}
+      className={`inline-flex w-fit items-center gap-2 md:gap-3 px-5 md:px-7 py-3 md:py-4 rounded-[5px] text-sm md:text-[1.55rem] font-semibold select-none will-change-transform ${className}`}
       style={{
         background: colors.bg,
         color: colors.text,

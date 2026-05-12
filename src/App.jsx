@@ -11,6 +11,8 @@ import Hero from './sections/Hero';
 import Intro from './sections/Intro';
 import Resume from './sections/Resume';
 import ProjectIndex from './sections/ProjectIndex';
+import Footer from './sections/Footer';
+// import Navbar from './components//Navbar';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -70,44 +72,12 @@ function App() {
 
       {/* Main Content */}
       <main ref={mainRef} className="relative z-10">
+        {/* <Navbar /> */}
         <Hero />
         <Intro />
         <Resume />
         <ProjectIndex />
-
-        <footer className="relative z-10 px-4 sm:px-5 md:px-12 lg:px-20 pb-10 md:pb-14 pt-12 md:pt-16">
-          <div className="max-w-7xl mx-auto rounded-2xl border border-dashed border-white/20 bg-[#090D25]/80 backdrop-blur-sm px-6 md:px-10 py-8 md:py-10 text-center">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-8 md:gap-10">
-              <div className="max-w-2xl mx-auto">
-                <p className="text-neon-green text-sm md:text-base tracking-[0.18em] uppercase mb-2">Let&apos;s Collaborate</p>
-                <h3 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white leading-tight" style={{ fontFamily: 'var(--font-family-primary)' }}>
-                  Build your next
-                  <span className="text-neon-pink"> standout product</span>
-                </h3>
-                <p className="text-text-secondary mt-4 max-w-xl">
-                  Open for product design, UX strategy, and end-to-end UI systems.
-                </p>
-              </div>
-
-              <a
-                href="mailto:hello@suriya.design"
-                className="inline-flex w-full md:w-auto items-center justify-center px-4 sm:px-6 py-3 rounded-xl bg-neon-green text-bg-primary text-sm sm:text-base font-bold break-all shadow-[0_8px_24px_rgba(190,255,70,0.35)] hover:shadow-[0_12px_30px_rgba(190,255,70,0.45)] transition-shadow"
-                data-cursor-text="Email"
-              >
-                hello@suriya.design
-              </a>
-            </div>
-
-            <div className="mt-8 pt-5 border-t border-white/10 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-center text-sm text-text-secondary">
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <a href="#hero" className="hover:text-white transition-colors">Home</a>
-                <a href="#projects" className="hover:text-white transition-colors">Projects</a>
-                <a href="#resume" className="hover:text-white transition-colors">Resume</a>
-              </div>
-              <p>© 2025 Umme Kulsum Suriya</p>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </main>
     </>
   );

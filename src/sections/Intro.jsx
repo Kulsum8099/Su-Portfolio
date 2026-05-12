@@ -158,8 +158,8 @@ const Intro = () => {
       ref={sectionRef}
       className="section-container py-12 md:py-20 px-4 sm:px-5 md:px-12 lg:px-20 relative"
     >
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.02fr_0.98fr] gap-0 items-stretch min-h-[60vh] lg:min-h-[78vh] border border-white/8 rounded-[18px] overflow-hidden">
+      <div className="mx-auto relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.02fr_0.98fr] gap-0 items-stretch min-h-[60vh] lg:min-h-[78vh]rounded-[18px] overflow-hidden">
           {/* Left - Text */}
           <div className="relative flex items-center justify-center px-5 sm:px-8 md:px-14 lg:px-16 py-9 sm:py-12 md:py-16 border-b lg:border-b-0 lg:border-r border-white/8 text-center">
             <p
@@ -196,7 +196,7 @@ const Intro = () => {
           </div>
 
           {/* Right - Image */}
-          <div className="relative h-full min-h-[320px] sm:min-h-[420px] md:min-h-[560px] lg:min-h-[640px]">
+          <div className="relative h-full min-h-[80px] sm:min-h-[140px] md:min-h-[240px] lg:min-h-[300px]">
             <div
               ref={imageRef}
               className="relative h-full w-full opacity-0 will-change-transform"
@@ -213,7 +213,7 @@ const Intro = () => {
                 }}
               >
                 <img
-                  src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=1000&q=80"
+                  src={new URL('../assets/images/me/portfolio.png', import.meta.url).href}
                   alt="Designer portrait"
                   className="w-full h-full object-cover"
                 />

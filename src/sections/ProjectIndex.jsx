@@ -97,12 +97,12 @@ const ProjectIndex = () => {
         <div className="hidden md:block absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-0 pointer-events-none">
           <h2 className="text-[6rem] md:text-[9rem] lg:text-[11rem] font-bold text-white/[0.13] leading-none tracking-tight"
             style={{ writingMode: 'vertical-lr', fontFamily: 'var(--font-family-primary)' }}>
-            INDEX
+            Projects
           </h2>
         </div>
 
         {/* Content */}
-        <div className={`relative z-10 ${isMobile ? 'py-8' : 'flex items-center h-screen pt-10'}`}>
+        <div className={`relative z-10 ${isMobile ? 'py-8' : 'flex items-center h-screen'}`}>
           <div
             ref={trackRef}
             className={`${isMobile ? 'flex flex-col items-center gap-6 px-4' : 'flex items-center gap-8 md:gap-12'} will-change-transform`}

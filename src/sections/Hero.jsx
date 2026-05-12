@@ -10,6 +10,7 @@ const Hero = () => {
   const adminRef = useRef(null);
   const smileyRef = useRef(null);
   const flowerRef = useRef(null);
+  const scrollIndicatorRef = useRef(null);
 
   useGSAP(
     () => {
@@ -108,6 +109,23 @@ const Hero = () => {
         yoyo: true,
         delay: 4.5,
       });
+
+      // Scroll indicator fade in and pulse
+      tl.fromTo(
+        scrollIndicatorRef.current,
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+        "-=0.2"
+      );
+
+      gsap.to(scrollIndicatorRef.current, {
+        y: 8,
+        duration: 1.5,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        delay: 4.2,
+      });
     },
     { scope: heroRef }
   );
@@ -171,11 +189,7 @@ const Hero = () => {
               icon="🌸"
               delay={0.2}
             /> */}
-            <FloatingBadge
-              text="UX-UI Design"
-              color="pink"
-              delay={0.2}
-            />
+            <FloatingBadge text="UX-UI Design" color="pink" delay={0.2} />
           </div>
           <div className="hero-badge opacity-0">
             <FloatingBadge text="Branding" color="green" delay={0.4} />
@@ -210,6 +224,46 @@ const Hero = () => {
       >
         🌸
       </div>
+
+      {/* Scroll Down Indicator */}
+      <div
+        ref={scrollIndicatorRef}
+        className="absolute bottom-8 right-8 md:bottom-12 md:right-12 z-10 opacity-0"
+      >
+        <div className="relative flex items-center justify-center">
+          {/* Capsule outline */}
+          <svg
+            className="w-8 h-12 md:w-10 md:h-14"
+            viewBox="0 0 40 60"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+          >
+            <rect x="8" y="5" width="24" height="50" rx="12" ry="12" />
+          </svg>
+
+          {/* Animated dot inside */}
+          <div
+            className="absolute w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/50"
+            style={{
+              animation: "scrollDotBounce 1.5s ease-in-out infinite",
+            }}
+          />
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes scrollDotBounce {
+          0%, 100% {
+            transform: translateY(-4px);
+            opacity: 0.8;
+          }
+          50% {
+            transform: translateY(8px);
+            opacity: 0.4;
+          }
+        }
+      `}</style>
 
       {/* Admin button
       <div

@@ -84,6 +84,7 @@ export const resumeData = {
     { name: 'Figma', icon: 'SiFigma', color: '#A259FF' },
     { name: 'Illustrator', icon: 'SiAdobeillustrator', color: '#FF9A00' },
     { name: 'Photoshop', icon: 'SiAdobephotoshop', color: '#31A8FF' },
+    { name: 'Miro', icon: 'SiMiro', color: '#FFD02F' },
     { name: 'After Effects', icon: 'SiAdobeaftereffects', color: '#9999FF' },
     { name: 'Premiere Pro', icon: 'SiAdobepremierepro', color: '#9999FF' },
     { name: 'XD', icon: 'SiAdobexd', color: '#FF61F6' },

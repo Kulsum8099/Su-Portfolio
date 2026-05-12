@@ -1,21 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { HiMenuAlt4, HiX } from 'react-icons/hi';
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { HiMenuAlt4, HiX } from "react-icons/hi";
 
 gsap.registerPlugin(ScrollToPlugin);
 
 const navItems = [
-  { label: 'Home', target: '#hero' },
-  { label: 'Intro', target: '#intro' },
-  { label: 'Resume', target: '#resume' },
-  { label: 'Index', target: '#projects' },
+  { label: "Home", target: "#hero" },
+  { label: "Intro", target: "#intro" },
+  { label: "Resume", target: "#resume" },
+  { label: "Index", target: "#projects" },
 ];
 
 const Navbar = () => {
   const navRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('Home');
+  const [activeSection, setActiveSection] = useState("Home");
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
   const mobileMenuRef = useRef(null);
@@ -33,13 +33,13 @@ const Navbar = () => {
       lastScrollY.current = currentScrollY;
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Active section detection
   useEffect(() => {
-    const sections = ['hero', 'intro', 'resume', 'projects'];
+    const sections = ["hero", "intro", "resume", "projects"];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -66,17 +66,17 @@ const Navbar = () => {
       gsap.fromTo(
         mobileMenuRef.current,
         { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }
+        { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }
       );
       gsap.fromTo(
-        '.mobile-nav-item',
+        ".mobile-nav-item",
         { opacity: 0, x: -30 },
         {
           opacity: 1,
           x: 0,
           duration: 0.5,
           stagger: 0.08,
-          ease: 'power3.out',
+          ease: "power3.out",
           delay: 0.15,
         }
       );
@@ -88,7 +88,7 @@ const Navbar = () => {
     gsap.to(window, {
       duration: 1.2,
       scrollTo: { y: target, offsetY: 80 },
-      ease: 'power3.inOut',
+      ease: "power3.inOut",
     });
   };
 
@@ -99,13 +99,13 @@ const Navbar = () => {
     const rect = el.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    gsap.to(el, { x: x * 0.2, y: y * 0.2, duration: 0.3, ease: 'power2.out' });
+    gsap.to(el, { x: x * 0.2, y: y * 0.2, duration: 0.3, ease: "power2.out" });
   };
 
   const handleMouseLeave = (index) => {
     const el = itemRefs.current[index];
     if (!el) return;
-    gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.3)' });
+    gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
   };
 
   return (
@@ -113,20 +113,10 @@ const Navbar = () => {
       <nav
         ref={navRef}
         className="fixed top-0 left-0 w-full z-[100] transition-transform duration-500"
-        style={{ transform: hidden ? 'translateY(-100%)' : 'translateY(0)' }}
+        style={{ transform: hidden ? "translateY(-100%)" : "translateY(0)" }}
       >
-        <div className="mx-auto max-w-7xl px-6 py-4">
+        <div className="mx-auto   px-6 py-4">
           <div className="bg-[#0B1023]/70 backdrop-blur-xl border border-neon-purple/20 rounded-2xl px-6 py-3 flex items-center justify-between shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-            {/* Logo */}
-            <button
-              onClick={() => scrollToSection('#hero')}
-              className="text-lg font-bold tracking-tight"
-              data-cursor-text="Home"
-            >
-              <span className="text-neon-green">S</span>
-              <span className="text-white">uriya</span>
-            </button>
-
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-1">
               {navItems.map((item, i) => (
@@ -138,8 +128,8 @@ const Navbar = () => {
                   onMouseLeave={() => handleMouseLeave(i)}
                   className={`relative px-5 py-2 text-sm font-medium rounded-xl transition-colors duration-300 ${
                     activeSection === item.label
-                      ? 'text-neon-green'
-                      : 'text-text-secondary hover:text-white'
+                      ? "text-neon-green"
+                      : "text-text-secondary hover:text-white"
                   }`}
                   data-cursor-text={item.label}
                 >
