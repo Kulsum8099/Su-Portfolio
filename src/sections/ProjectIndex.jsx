@@ -73,8 +73,7 @@ const ProjectIndex = () => {
         pin: true,
         anticipatePin: 1,
         scrub: 1,
-        end: () => `+=${getTotalScroll() + 120}`,
-        fastScrollEnd: true,
+        end: () => `+=${getTotalScroll()}`,
         invalidateOnRefresh: true,
       },
     });
@@ -95,7 +94,7 @@ const ProjectIndex = () => {
       <section id="projects" ref={sectionRef} className="relative overflow-hidden" style={{ minHeight: isMobile ? 'auto' : '100vh' }}>
         {/* INDEX text */}
         <div className="hidden md:block absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-0 pointer-events-none">
-          <h2 className="text-[6rem] md:text-[9rem] lg:text-[11rem] font-bold text-white/[0.13] leading-none tracking-tight"
+          <h2 className="text-[6rem] md:text-[9rem] lg:text-[10rem] font-bold text-white/[0.13] leading-none tracking-tight"
             style={{ writingMode: 'vertical-lr', fontFamily: 'var(--font-family-primary)' }}>
             Projects
           </h2>
