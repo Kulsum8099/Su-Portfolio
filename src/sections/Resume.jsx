@@ -75,7 +75,6 @@ const Resume = () => {
     <section
       id="resume"
       ref={sectionRef}
-      className="section-container py-16 md:py-20"
       style={{
         paddingLeft:  'clamp(2rem, 6vw, 6rem)',
         paddingRight: 'clamp(2rem, 6vw, 6rem)',

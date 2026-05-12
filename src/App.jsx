@@ -71,7 +71,7 @@ function App() {
       {isLoading && <Loader onComplete={handleLoaderComplete} />}
 
       {/* Main Content */}
-      <main ref={mainRef} className="relative z-10">
+      <main ref={mainRef} className="grid gap-8 md:gap-16">
         {/* <Navbar /> */}
         <Hero />
         <Intro />
