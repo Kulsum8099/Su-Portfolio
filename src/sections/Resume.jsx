@@ -98,7 +98,7 @@ const Resume = () => {
                   className="text-4xl md:text-5xl font-bold text-white mb-1"
                   style={{ fontFamily: 'var(--font-family-primary)' }}
                 >
-                  Nemish Zawar
+                  Umme Kulsum Suriya
                 </h2>
                 <p className="text-text-secondary text-sm tracking-[0.15em] uppercase">
                   UX-UI Designer
@@ -122,11 +122,13 @@ const Resume = () => {
             {/* Experience — BentoCard handles all padding; children: layout only */}
             <div className="bento-card opacity-0">
               <BentoCard label="Experience" labelColor="pink">
-                <div className="space-y-3.5">
+                <div className="space-y-8">
                   {resumeData.experience.map((exp, i) => (
-                    <div key={i} className="border-b border-white/10 pb-3 last:border-0 last:pb-0">
-                      <h4 className="text-white font-semibold text-[1.02rem] leading-tight">{exp.title}</h4>
-                      <p className="text-text-muted text-sm mt-1 leading-tight">{exp.period} | {exp.company}</p>
+                    <div key={i} className="border-b border-white/10 pt-4 pb-4 last:border-0 last:pt-0 last:pb-0">
+                      <div className="px-6 py-3">
+                        <h4 className="text-white font-semibold text-[1.02rem] leading-tight">{exp.title}</h4>
+                        <p className="text-text-muted text-sm mt-2 leading-tight">{exp.period} | {exp.company}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -145,12 +147,14 @@ const Resume = () => {
             {/* Education */}
             <div className="bento-card opacity-0">
               <BentoCard label="Education" labelColor="green">
-                <div className="space-y-4">
+                <div className="space-y-8">
                   {resumeData.education.map((edu, i) => (
-                    <div key={i} className="border-b border-white/10 pb-3 last:border-0 last:pb-0">
-                      <p className="text-text-muted text-xs">{edu.period} | {edu.location}</p>
-                      <h4 className="text-white font-semibold text-[1.08rem] mt-0.5 leading-tight">{edu.degree}</h4>
-                      <p className="text-text-muted text-sm leading-tight">{edu.institution}</p>
+                    <div key={i} className="border-b border-white/10 pt-4 pb-4 last:border-0 last:pt-0 last:pb-0">
+                      <div className="px-6 py-3">
+                        <p className="text-text-muted text-xs">{edu.period} | {edu.location}</p>
+                        <h4 className="text-white font-semibold text-[1.08rem] mt-0.5 leading-tight">{edu.degree}</h4>
+                        <p className="text-text-muted text-sm leading-tight">{edu.institution}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -160,11 +164,13 @@ const Resume = () => {
             {/* Certifications */}
             <div className="bento-card opacity-0">
               <BentoCard label="Certifications" labelColor="purple">
-                <div className="space-y-4">
+                <div className="space-y-8">
                   {resumeData.certifications.map((cert, i) => (
-                    <div key={i} className="border-b border-white/10 pb-3 last:border-0 last:pb-0">
-                      <h4 className="text-white font-semibold text-[1.12rem] leading-tight">{cert.title}</h4>
-                      <p className="text-text-muted text-sm mt-0.5 leading-tight">{cert.issuer}</p>
+                    <div key={i} className="border-b border-white/10 pt-4 pb-4 last:border-0 last:pt-0 last:pb-0">
+                      <div className="px-6 py-3">
+                        <h4 className="text-white font-semibold text-[1.12rem] leading-tight">{cert.title}</h4>
+                        <p className="text-text-muted text-sm mt-0.5 leading-tight">{cert.issuer}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -184,9 +190,9 @@ const Resume = () => {
             {/* Skills */}
             <div className="bento-card opacity-0">
               <BentoCard label="Skills" labelColor="lightpink">
-                <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                <div className="grid grid-cols-2 gap-x-3 gap-y-3">
                   {resumeData.skills.map((skill, i) => (
-                    <div key={i} className="flex items-center gap-2 py-1 text-[0.92rem] text-text-secondary">
+                    <div key={i} className="flex items-center gap-2 py-2 px-3 text-[0.92rem] text-text-secondary">
                       <FaCheck className="text-neon-green text-xs flex-shrink-0" />
                       <span>{skill}</span>
                     </div>
@@ -198,11 +204,11 @@ const Resume = () => {
             {/* Tools */}
             <div className="bento-card opacity-0">
               <BentoCard label="Tools" labelColor="pink">
-                <div className="grid grid-cols-4 gap-x-2 gap-y-3">
+                <div className="grid grid-cols-4 gap-x-3 gap-y-4">
                   {resumeData.tools.map((tool, i) => (
                     <div
                       key={i}
-                      className="group flex flex-col items-center gap-1.5 p-1.5 rounded-xl hover:bg-white/5 transition-colors"
+                      className="group flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-white/5 transition-colors"
                       data-cursor-text={tool.name}
                     >
                       <span className="transition-transform duration-300 group-hover:scale-125 group-hover:-translate-y-1 text-[1.9rem]">

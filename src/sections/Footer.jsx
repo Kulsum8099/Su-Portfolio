@@ -56,10 +56,10 @@ const Footer = () => {
             </div>
 
             {/* Divider */}
-            <div className="border-t border-white/10" />
+            {/* <div className="border-t border-white/10" /> */}
 
             {/* Bottom bar */}
-            <div className="px-4 md:px-6 pt-6 md:pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-text-secondary">
+            <div className="px-4 md:px-6 pt-8 md:pt-12 pb-6 md:pb-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-text-secondary">
               {/* Name / brand */}
               <p className="font-medium tracking-wide text-white/50">
                 © 2025 <span className="text-white/80">Umme Kulsum Suriya</span>
