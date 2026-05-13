@@ -12,6 +12,7 @@ import Intro from './sections/Intro';
 import Resume from './sections/Resume';
 import ProjectIndex from './sections/ProjectIndex';
 import Footer from './sections/Footer';
+// import ResumeSection from './components/ResumeSection';
 // import Navbar from './components//Navbar';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -76,6 +77,7 @@ function App() {
         <Hero />
         <Intro />
         <Resume />
+        {/* <ResumeSection /> */}
         <ProjectIndex />
         <Footer />
       </main>

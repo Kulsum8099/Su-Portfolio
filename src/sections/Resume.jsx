@@ -122,10 +122,10 @@ const Resume = () => {
             {/* Experience — BentoCard handles all padding; children: layout only */}
             <div className="bento-card opacity-0">
               <BentoCard label="Experience" labelColor="pink">
-                <div className="space-y-8">
+                <div className="grid gap-3">
                   {resumeData.experience.map((exp, i) => (
                     <div key={i} className="border-b border-white/10 pt-4 pb-4 last:border-0 last:pt-0 last:pb-0">
-                      <div className="px-6 py-3">
+                      <div className="px-3 py-3">
                         <h4 className="text-white font-semibold text-[1.02rem] leading-tight">{exp.title}</h4>
                         <p className="text-text-muted text-sm mt-2 leading-tight">{exp.period} | {exp.company}</p>
                       </div>
@@ -147,7 +147,7 @@ const Resume = () => {
             {/* Education */}
             <div className="bento-card opacity-0">
               <BentoCard label="Education" labelColor="green">
-                <div className="space-y-8">
+                 <div className="grid gap-3">
                   {resumeData.education.map((edu, i) => (
                     <div key={i} className="border-b border-white/10 pt-4 pb-4 last:border-0 last:pt-0 last:pb-0">
                       <div className="px-6 py-3">
@@ -164,7 +164,7 @@ const Resume = () => {
             {/* Certifications */}
             <div className="bento-card opacity-0">
               <BentoCard label="Certifications" labelColor="purple">
-                <div className="space-y-8">
+                <div className="grid gap-3">
                   {resumeData.certifications.map((cert, i) => (
                     <div key={i} className="border-b border-white/10 pt-4 pb-4 last:border-0 last:pt-0 last:pb-0">
                       <div className="px-6 py-3">
