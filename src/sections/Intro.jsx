@@ -1,8 +1,8 @@
-import { useRef } from 'react';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import useMouseParallax from '../hooks/useMouseParallax';
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import useMouseParallax from "../hooks/useMouseParallax";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,7 +17,7 @@ const Intro = () => {
   useGSAP(
     () => {
       // Text reveal
-      const words = textRef.current?.querySelectorAll('.intro-word');
+      const words = textRef.current?.querySelectorAll(".intro-word");
       if (words) {
         gsap.fromTo(
           words,
@@ -27,11 +27,11 @@ const Intro = () => {
             opacity: 1,
             duration: 0.8,
             stagger: 0.06,
-            ease: 'power3.out',
+            ease: "power3.out",
             scrollTrigger: {
               trigger: textRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none none',
+              start: "top 80%",
+              toggleActions: "play none none none",
             },
           }
         );
@@ -40,16 +40,16 @@ const Intro = () => {
       // Image reveal
       gsap.fromTo(
         imageRef.current,
-        { clipPath: 'inset(100% 0 0 0)', opacity: 0 },
+        { clipPath: "inset(100% 0 0 0)", opacity: 0 },
         {
-          clipPath: 'inset(0% 0 0 0)',
+          clipPath: "inset(0% 0 0 0)",
           opacity: 1,
           duration: 1.2,
-          ease: 'power4.inOut',
+          ease: "power4.inOut",
           scrollTrigger: {
             trigger: imageRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
+            start: "top 80%",
+            toggleActions: "play none none none",
           },
         }
       );
@@ -58,7 +58,7 @@ const Intro = () => {
       gsap.to(imageRef.current, {
         y: -15,
         duration: 3,
-        ease: 'sine.inOut',
+        ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
         delay: 1,
@@ -75,11 +75,11 @@ const Intro = () => {
             rotation: 0,
             opacity: 1,
             duration: 0.8,
-            ease: 'back.out(2)',
+            ease: "back.out(2)",
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: 'top 60%',
-              toggleActions: 'play none none none',
+              start: "top 60%",
+              toggleActions: "play none none none",
             },
             delay: i * 0.2,
           }
@@ -89,7 +89,7 @@ const Intro = () => {
           y: gsap.utils.random(-20, -10),
           rotation: gsap.utils.random(-10, 10),
           duration: gsap.utils.random(2.5, 3.5),
-          ease: 'sine.inOut',
+          ease: "sine.inOut",
           repeat: -1,
           yoyo: true,
           delay: 2 + i * 0.3,
@@ -101,31 +101,31 @@ const Intro = () => {
 
   const renderStatement = () => {
     const parts = [
-      { text: 'Designing seamless,', type: 'normal' },
-      { text: 'user-centered', type: 'highlight', color: 'green' },
-      { text: 'experiences', type: 'highlight', color: 'pink' },
-      { text: 'that drive', type: 'normal' },
-      { text: 'engagement and', type: 'normal' },
-      { text: 'innovation.', type: 'highlight', color: 'purple' },
+      { text: "Designing seamless,", type: "normal" },
+      { text: "user-centered", type: "highlight", color: "green" },
+      { text: "experiences", type: "highlight", color: "pink" },
+      { text: "that drive", type: "normal" },
+      { text: "engagement and", type: "normal" },
+      { text: "innovation.", type: "highlight", color: "purple" },
     ];
 
     return parts.map((part, i) => {
-      if (part.type === 'highlight') {
+      if (part.type === "highlight") {
         const colors = {
           green: {
-            bg: 'bg-neon-green',
-            text: 'text-bg-primary',
-            shadow: '0 0 20px rgba(190, 255, 70, 0.3)',
+            bg: "bg-neon-green",
+            text: "text-bg-primary",
+            shadow: "0 0 20px rgba(190, 255, 70, 0.3)",
           },
           pink: {
-            bg: 'bg-neon-pink',
-            text: 'text-white',
-            shadow: '0 0 20px rgba(255, 107, 157, 0.3)',
+            bg: "bg-neon-pink",
+            text: "text-white",
+            shadow: "0 0 20px rgba(255, 107, 157, 0.3)",
           },
           purple: {
-            bg: 'bg-neon-purple',
-            text: 'text-white',
-            shadow: '0 0 20px rgba(139, 92, 246, 0.3)',
+            bg: "bg-neon-purple",
+            text: "text-white",
+            shadow: "0 0 20px rgba(139, 92, 246, 0.3)",
           },
         };
         const c = colors[part.color];
@@ -142,11 +142,12 @@ const Intro = () => {
           </span>
         );
       }
-      return part.text.split(' ').map((word, j) => (
-        <span key={`${i}-${j}`} className="inline-block mr-2 md:mr-3 mb-1 md:mb-2">
-          <span className="intro-word inline-block opacity-0">
-            {word}
-          </span>
+      return part.text.split(" ").map((word, j) => (
+        <span
+          key={`${i}-${j}`}
+          className="inline-block mr-2 md:mr-3 mb-1 md:mb-2"
+        >
+          <span className="intro-word inline-block opacity-0">{word}</span>
         </span>
       ));
     });
@@ -165,7 +166,7 @@ const Intro = () => {
             <p
               ref={textRef}
               className="text-[2.1rem] sm:text-5xl md:text-6xl lg:text-[4.15rem] font-bold leading-[1.12] tracking-tight max-w-[18ch] mx-auto"
-              style={{ fontFamily: 'var(--font-family-primary)' }}
+              style={{ fontFamily: "var(--font-family-primary)" }}
             >
               {renderStatement()}
             </p>
@@ -176,7 +177,7 @@ const Intro = () => {
               className="absolute left-3 sm:left-5 md:left-8 top-[28%] sm:top-[38%] text-3xl sm:text-4xl md:text-5xl opacity-0 select-none will-change-transform"
               style={{
                 transform: `translate(${mouse.x * 20}px, ${mouse.y * 15}px)`,
-                transition: 'transform 0.3s ease-out',
+                transition: "transform 0.3s ease-out",
               }}
             >
               🐰
@@ -188,7 +189,7 @@ const Intro = () => {
               className="absolute right-4 sm:right-8 md:right-12 bottom-[11%] sm:bottom-[22%] text-3xl sm:text-4xl md:text-5xl opacity-0 select-none will-change-transform"
               style={{
                 transform: `translate(${mouse.x * -15}px, ${mouse.y * -20}px)`,
-                transition: 'transform 0.3s ease-out',
+                transition: "transform 0.3s ease-out",
               }}
             >
               🐇
@@ -196,40 +197,15 @@ const Intro = () => {
           </div>
 
           {/* Right - Image */}
-          <div className="relative h-full min-h-[80px] sm:min-h-[140px] md:min-h-[240px] lg:min-h-[300px]">
-            <div
-              ref={imageRef}
-              className="relative h-full w-full opacity-0 will-change-transform"
-              style={{
-                boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08)',
-              }}
-              data-cursor-text="View"
-            >
-              <div
-                className="w-full h-full relative overflow-hidden"
-                style={{
-                  background:
-                    'linear-gradient(135deg, rgba(41,30,93,0.4) 0%, rgba(48,35,110,0.12) 22%, rgba(8,13,40,0.8) 44%, rgba(10,15,42,0.88) 100%)',
-                }}
-              >
-                <img
-                  src={new URL('../assets/images/me/portfolio.png', import.meta.url).href}
-                  alt="Designer portrait"
-                  className="w-full h-full object-cover"
-                />
-
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: 'linear-gradient(180deg, rgba(5,8,24,0) 48%, rgba(5,8,24,0.16) 72%, rgba(5,8,24,0.45) 100%)',
-                  }}
-                />
-
-                <div className="absolute top-3 left-3 sm:top-5 sm:left-5 px-2.5 sm:px-3 py-1 rounded-[8px] bg-white/90 text-[#10142B] text-[10px] sm:text-xs font-semibold tracking-wide">
-                  Portfolio Portrait
-                </div>
-              </div>
-            </div>
+          <div>
+            <img
+              src={
+                new URL("../assets/images/me/portfolio.png", import.meta.url)
+                  .href
+              }
+              alt="Designer portrait"
+              className="w-full h-[720px] object-cover"
+            />
           </div>
         </div>
       </div>
