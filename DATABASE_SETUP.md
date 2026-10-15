@@ -65,7 +65,39 @@ development and production.
 6. Put the string in `.env` as `MONGODB_URI` (next sections) and run
    `npm run db:check`.
 
-### Option B — Local MongoDB (development only)
+### Option B — Reuse an Atlas cluster you already have
+
+Atlas allows one free cluster per **project** (not per account), so you can
+either create a new project for a second free cluster, or put the portfolio in
+a cluster another app already uses. Sharing is fine: the portfolio keeps all of
+its data in its own database (`su_portfolio`), separate from the other app's.
+
+1. If the cluster is paused, click **Resume** on the project overview and wait
+   until it is running again.
+2. **Create a new database user just for the portfolio** (do not reuse the
+   other app's user): *Database Access → Add New Database User →* Specific
+   Privileges → `readWrite` on database `su_portfolio` only. The portfolio then
+   cannot read or change the other app's data, and the other app's credentials
+   cannot touch the portfolio.
+3. **Network Access is shared by everything in the project.** If the other app
+   already allows `0.0.0.0/0`, there is nothing to add; otherwise adding it for
+   Vercel also applies to the other app's data (still password-protected), so
+   make sure every database user in the project has a strong password.
+4. Copy the connection string from the cluster's *Connect → Drivers* and put
+   the **new** user's name and password in it.
+5. Set **`MONGODB_DB_NAME=su_portfolio`** explicitly, locally and on Vercel.
+   A connection string copied from the other app may end in its database name
+   (`…mongodb.net/shopease?…`); this setting makes sure the portfolio still uses
+   its own database. With the user limited to `su_portfolio`, such a mistake
+   fails with an authorization error instead of writing into the other app.
+6. Run `npm run db:check` — it must print `Connected to database "su_portfolio"`.
+
+Both apps share the free tier's 512 MB of storage and its connection limit. A
+portfolio uses very little (text, plus images that are compressed to a few
+hundred KB each), and its regular visits also keep the cluster from being
+paused for inactivity.
+
+### Option C — Local MongoDB (development only)
 
 - **Installer:** MongoDB Community Server from
   <https://www.mongodb.com/try/download/community> (it runs as a service on
@@ -387,6 +419,7 @@ files). Restore with `mongorestore`.
 | --- | --- | --- |
 | `MONGODB_URI is not set` | No `.env`, or the variable is missing on the host | Create `.env` from `.env.example`; on Vercel add the variable and **redeploy**. |
 | `Authentication failed` / `bad auth` | Wrong username/password, or unencoded special characters | Re-copy the string from Atlas, reset the user's password, URL-encode special characters. |
+| `not authorized on <name> to execute command` | Connected to a database the user may not use — often another app's database name at the end of a copied URI | Set `MONGODB_DB_NAME=su_portfolio`, and give the user `readWrite` on `su_portfolio` (see [Option B](#option-b--reuse-an-atlas-cluster-you-already-have)). |
 | `Timed out` / server selection timeout | Your IP (or Vercel) is not allowed in Atlas | *Network Access* → add your current IP (or `0.0.0.0/0` for serverless); wait a minute and retry. Corporate networks may block port 27017 — try another network. |
 | `querySrv ENOTFOUND` / `ECONNREFUSED` with `mongodb+srv://` | DNS cannot resolve SRV records (some ISPs/routers) | Check the cluster host name; switch your DNS to 1.1.1.1 or 8.8.8.8; or use Atlas's standard (non-SRV) connection string. |
 | `Connection refused` with `mongodb://127.0.0.1` | Local MongoDB isn't running | Start the MongoDB service or the Docker container. |
