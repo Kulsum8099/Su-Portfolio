@@ -1,242 +1,244 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import BentoCard from '../components/BentoCard';
-import { resumeData } from '../data/resumeData';
 import { FaCheck } from 'react-icons/fa';
 import { HiOutlineMail, HiOutlinePhone } from 'react-icons/hi';
 import { RiGlobalLine, RiLinkedinFill } from 'react-icons/ri';
-import { SiFigma, SiOpenai, SiMiro } from 'react-icons/si';
-
-gsap.registerPlugin(ScrollTrigger);
-
-const AiIcon = ({ color }) => (
-  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: color, color: '#fff' }}>Ai</div>
-);
-const PsIcon = ({ color }) => (
-  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: color, color: '#fff' }}>Ps</div>
-);
-const AeIcon = ({ color }) => (
-  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: color, color: '#fff' }}>Ae</div>
-);
-const PrIcon = ({ color }) => (
-  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: color, color: '#fff' }}>Pr</div>
-);
-const XdIcon = ({ color }) => (
-  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: color, color: '#fff' }}>Xd</div>
-);
-
-const toolIconMap = {
-  SiFigma:             (color) => <SiFigma style={{ color }} className="text-2xl" />,
-  SiAdobeillustrator:  (color) => <AiIcon color={color} />,
-  SiAdobephotoshop:    (color) => <PsIcon color={color} />,
-  SiMiro:              (color) => <SiMiro style={{ color }} className="text-2xl" />,
-  SiAdobeaftereffects: (color) => <AeIcon color={color} />,
-  SiAdobepremierepro:  (color) => <PrIcon color={color} />,
-  SiAdobexd:           (color) => <XdIcon color={color} />,
-  SiOpenai:            (color) => <SiOpenai style={{ color }} className="text-2xl" />,
-};
+import { revealOnScroll } from '../animations/reveal';
+import BentoCard from '../components/BentoCard';
+import ToolIcon from '../components/ToolIcon';
 
 /*
-  SPACING CONTRACT (BentoCard ↔ Resume):
-  ─────────────────────────────────────
-  BentoCard owns ALL inner card padding:
-    • Label:   px-6 pt-6         (24px left/right, 24px top)
-    • Content: px-6 pt-4 pb-6    (24px left/right, 16px top gap after label, 24px bottom)
-
-  Resume children must NOT add any px-* / py-* / p-* of their own.
-  They only add layout spacing: space-y-*, gap-*, etc.
-
-  Section x-axis padding is set via inline clamp() style to guarantee
-  it overrides whatever `section-container` applies globally.
+  LAYOUT
+  • Gutters/width come from the shared `container-page` utility.
+  • Columns: 1 (mobile) → 2-col bento (md–lg) → 3 columns (xl+).
 */
+const itemList = 'divide-y divide-white/10';
+const item = 'py-3.5 first:pt-0 last:pb-0';
+const itemTitle = 'text-base leading-snug font-semibold text-white md:text-[1.05rem]';
+const itemMeta = 'text-sm leading-snug text-text-muted';
 
-const GAP = 'gap-8'; // 32px — uniform between columns AND between stacked cards
+/** "https://www.linkedin.com/in/name/" → "linkedin.com/in/name" */
+const displayUrl = (url) => {
+  try {
+    const { hostname, pathname } = new URL(url);
+    return `${hostname.replace(/^www\./, '')}${pathname}`.replace(/\/+$/, '');
+  } catch {
+    return url;
+  }
+};
 
-const Resume = () => {
+const contactLinks = (profile) =>
+  [
+    profile.phone && {
+      key: 'phone',
+      kind: 'Phone',
+      icon: <HiOutlinePhone className="text-neon-pink" />,
+      label: profile.phone,
+      href: `tel:${profile.phone.replace(/[^\d+]/g, '')}`,
+    },
+    profile.email && {
+      key: 'email',
+      kind: 'Email',
+      icon: <HiOutlineMail className="text-neon-purple" />,
+      label: profile.email,
+      href: `mailto:${profile.email}`,
+    },
+    profile.website && {
+      key: 'website',
+      kind: 'Website',
+      icon: <RiGlobalLine className="text-neon-green" />,
+      label: displayUrl(profile.website),
+      href: profile.website,
+      external: true,
+    },
+    profile.linkedin && {
+      key: 'linkedin',
+      kind: 'LinkedIn',
+      icon: <RiLinkedinFill className="text-electric-blue" />,
+      label: displayUrl(profile.linkedin),
+      href: profile.linkedin,
+      external: true,
+    },
+  ].filter(Boolean);
+
+const ResumeSkeleton = () => (
+  <div className="container-page grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-3" aria-hidden="true">
+    {[0, 1, 2].map((column) => (
+      <div key={column} className="flex flex-col gap-5">
+        <div className="skeleton h-10 w-2/3" />
+        {[0, 1, 2, 3].map((row) => (
+          <div key={row} className="skeleton h-14" />
+        ))}
+      </div>
+    ))}
+  </div>
+);
+
+const Resume = ({ profile }) => {
   const sectionRef = useRef(null);
 
-  const contactCards = [
-    { icon: <HiOutlinePhone className="text-neon-pink" />,     text: '+91 866 844 7932'      },
-    { icon: <HiOutlineMail className="text-neon-purple" />,    text: 'nemishzawar@gmail.com' },
-    { icon: <RiGlobalLine className="text-neon-green" />,      text: 'www.nishfolio.com'     },
-    { icon: <RiLinkedinFill className="text-electric-blue" />, text: 'Linkedin/nemishzawar/' },
-  ];
-
-  useGSAP(() => {
-    gsap.fromTo('.bento-card', { y: 50, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out',
-      scrollTrigger: { trigger: sectionRef.current, start: 'top 70%', toggleActions: 'play none none none' },
-    });
-  }, { scope: sectionRef });
+  useGSAP(
+    () => {
+      if (profile) revealOnScroll(sectionRef.current.querySelectorAll('.resume-card'));
+    },
+    { scope: sectionRef, dependencies: [Boolean(profile)] },
+  );
 
   return (
-    <section
-      id="resume"
-      ref={sectionRef}
-      style={{
-        paddingLeft:  'clamp(2rem, 6vw, 6rem)',
-        paddingRight: 'clamp(2rem, 6vw, 6rem)',
-      }}
-    >
-      <div className="w-full max-w-[1400px] mx-auto text-left">
-
-        <div className={`flex flex-col lg:flex-row ${GAP} items-start`}>
-
-          {/* ══════════════════════════════
-              LEFT COLUMN
-              • Profile info (no BentoCard wrapper)
-              • Experience card
-              ══════════════════════════════ */}
-          <div className={`flex flex-col ${GAP} w-full lg:w-[34%]`}>
-
-            {/* Profile info — raw block, not a BentoCard */}
-            <div className="flex flex-col gap-4">
+    <section id="resume" ref={sectionRef} tabIndex={-1} aria-labelledby="resume-heading" className="section-y">
+      {!profile ? (
+        <>
+          <h2 id="resume-heading" className="sr-only">
+            Resume
+          </h2>
+          <ResumeSkeleton />
+        </>
+      ) : (
+        <div className="container-page grid grid-cols-1 items-start gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-[34fr_37fr_29fr] xl:gap-x-12">
+          {/* ── Left: profile + experience ── */}
+          <div className="flex min-w-0 flex-col gap-12">
+            <div className="flex flex-col gap-5">
               <div>
-                <h2
-                  className="text-4xl md:text-5xl font-bold text-white mb-1"
-                  style={{ fontFamily: 'var(--font-family-primary)' }}
-                >
-                  Umme Kulsum Suriya
+                <h2 id="resume-heading" className="text-[clamp(2.25rem,5vw,3rem)] leading-[1.05] font-bold text-white">
+                  <span className="sr-only">Resume: </span>
+                  {profile.name}
                 </h2>
-                <p className="text-text-secondary text-sm tracking-[0.15em] uppercase">
-                  UX-UI Designer
-                </p>
+                {profile.role && (
+                  <p className="mt-2 text-sm tracking-[0.15em] text-text-secondary uppercase">{profile.role}</p>
+                )}
               </div>
 
-              {/* 2×2 contact pill cards */}
-              <div className="grid grid-cols-2 gap-3">
-                {contactCards.map((item, i) => (
-                  <div
-                    key={i}
-                    className="rounded-xl border border-dashed border-white/20 bg-[#0A0E28]/70 px-4 py-3 flex items-center gap-3 text-[0.92rem] text-white/90"
-                  >
-                    {item.icon}
-                    <span className="truncate">{item.text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Experience — BentoCard handles all padding; children: layout only */}
-            <div className="bento-card opacity-0">
-              <BentoCard label="Experience" labelColor="pink">
-                <div className="grid gap-3">
-                  {resumeData.experience.map((exp, i) => (
-                    <div key={i} className="border-b border-white/10 pt-4 pb-4 last:border-0 last:pt-0 last:pb-0">
-                      <div className="px-3 py-3">
-                        <h4 className="text-white font-semibold text-[1.02rem] leading-tight">{exp.title}</h4>
-                        <p className="text-text-muted text-sm mt-2 leading-tight">{exp.period} | {exp.company}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </BentoCard>
-            </div>
-
-          </div>
-
-          {/* ══════════════════════════════
-              MIDDLE COLUMN
-              • Education card
-              • Certifications card
-              ══════════════════════════════ */}
-          <div className={`flex flex-col ${GAP} w-full lg:w-[37%]`}>
-
-            {/* Education */}
-            <div className="bento-card opacity-0">
-              <BentoCard label="Education" labelColor="green">
-                 <div className="grid gap-3">
-                  {resumeData.education.map((edu, i) => (
-                    <div key={i} className="border-b border-white/10 pt-4 pb-4 last:border-0 last:pt-0 last:pb-0">
-                      <div className="px-6 py-3">
-                        <p className="text-text-muted text-xs">{edu.period} | {edu.location}</p>
-                        <h4 className="text-white font-semibold text-[1.08rem] mt-0.5 leading-tight">{edu.degree}</h4>
-                        <p className="text-text-muted text-sm leading-tight">{edu.institution}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </BentoCard>
-            </div>
-
-            {/* Certifications */}
-            <div className="bento-card opacity-0">
-              <BentoCard label="Certifications" labelColor="purple">
-                <div className="grid gap-3">
-                  {resumeData.certifications.map((cert, i) => (
-                    <div key={i} className="border-b border-white/10 pt-4 pb-4 last:border-0 last:pt-0 last:pb-0">
-                      <div className="px-6 py-3">
-                        <h4 className="text-white font-semibold text-[1.12rem] leading-tight">{cert.title}</h4>
-                        <p className="text-text-muted text-sm mt-0.5 leading-tight">{cert.issuer}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </BentoCard>
-            </div>
-
-          </div>
-
-          {/* ══════════════════════════════
-              RIGHT COLUMN
-              • Skills card
-              • Tools card
-              • About me card
-              ══════════════════════════════ */}
-          <div className={`flex flex-col ${GAP} w-full lg:w-[29%]`}>
-
-            {/* Skills */}
-            <div className="bento-card opacity-0">
-              <BentoCard label="Skills" labelColor="lightpink">
-                <div className="grid grid-cols-2 gap-x-3 gap-y-3">
-                  {resumeData.skills.map((skill, i) => (
-                    <div key={i} className="flex items-center gap-2 py-2 px-3 text-[0.92rem] text-text-secondary">
-                      <FaCheck className="text-neon-green text-xs flex-shrink-0" />
-                      <span>{skill}</span>
-                    </div>
-                  ))}
-                </div>
-              </BentoCard>
-            </div>
-
-            {/* Tools */}
-            <div className="bento-card opacity-0">
-              <BentoCard label="Tools" labelColor="pink">
-                <div className="grid grid-cols-4 gap-x-3 gap-y-4">
-                  {resumeData.tools.map((tool, i) => (
-                    <div
-                      key={i}
-                      className="group flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-white/5 transition-colors"
-                      data-cursor-text={tool.name}
+              {/* Contact pills — two per row only when each pill fits its text */}
+              <ul className="grid grid-cols-[repeat(auto-fit,minmax(14.5rem,1fr))] gap-3" aria-label="Contact details">
+                {contactLinks(profile).map((contact) => (
+                  <li key={contact.key} className="min-w-0">
+                    <a
+                      href={contact.href}
+                      {...(contact.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className="flex min-h-12 items-center gap-3 rounded-xl border border-dashed border-white/20 bg-surface/70 px-4 py-3 text-sm text-white/90 transition-colors duration-300 hover:border-white/40 hover:bg-white/5 hover:text-white"
                     >
-                      <span className="transition-transform duration-300 group-hover:scale-125 group-hover:-translate-y-1 text-[1.9rem]">
-                        {toolIconMap[tool.icon] ? toolIconMap[tool.icon](tool.color) : <span className="text-2xl">🔧</span>}
+                      <span className="shrink-0 text-base" aria-hidden="true">
+                        {contact.icon}
                       </span>
-                    </div>
-                  ))}
-                </div>
-              </BentoCard>
+                      <span className="sr-only">{contact.kind}: </span>
+                      <span className="min-w-0 [overflow-wrap:anywhere]">{contact.label}</span>
+                      {contact.external && <span className="sr-only"> (opens in a new tab)</span>}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* About me */}
-            <div className="bento-card opacity-0">
-              <BentoCard label="About me!" labelColor="green">
-                <div className="flex items-center gap-4 min-h-[120px]">
-                  <div className="text-5xl">😍</div>
-                  <div className="text-5xl">🐱</div>
-                  <div className="flex-1">
-                    <p className="text-text-secondary text-base italic">"If you hire me, you save two lives!"</p>
-                  </div>
-                </div>
-              </BentoCard>
-            </div>
-
+            {profile.experience?.length > 0 && (
+              <div className="resume-card">
+                <BentoCard label="Experience" labelColor="pink">
+                  <ul className={itemList}>
+                    {profile.experience.map((entry, index) => (
+                      <li key={`${entry.title}-${index}`} className={item}>
+                        <h4 className={itemTitle}>{entry.title}</h4>
+                        <p className={`${itemMeta} mt-1`}>{[entry.period, entry.organization].filter(Boolean).join(' | ')}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </BentoCard>
+              </div>
+            )}
           </div>
 
+          {/* ── Middle: education + certifications ── */}
+          <div className="flex min-w-0 flex-col gap-12">
+            {profile.education?.length > 0 && (
+              <div className="resume-card">
+                <BentoCard label="Education" labelColor="green">
+                  <ul className={itemList}>
+                    {profile.education.map((entry, index) => (
+                      <li key={`${entry.degree}-${index}`} className={item}>
+                        <p className="text-xs text-text-muted">{[entry.period, entry.location].filter(Boolean).join(' | ')}</p>
+                        <h4 className={`${itemTitle} mt-1`}>{entry.degree}</h4>
+                        {entry.institution && <p className={`${itemMeta} mt-0.5`}>{entry.institution}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                </BentoCard>
+              </div>
+            )}
+
+            {profile.certifications?.length > 0 && (
+              <div className="resume-card">
+                <BentoCard label="Certifications" labelColor="purple">
+                  <ul className={itemList}>
+                    {profile.certifications.map((entry, index) => (
+                      <li key={`${entry.title}-${index}`} className={item}>
+                        <h4 className={itemTitle}>{entry.title}</h4>
+                        {entry.issuer && <p className={`${itemMeta} mt-1`}>{entry.issuer}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                </BentoCard>
+              </div>
+            )}
+          </div>
+
+          {/* ── Right: skills, tools, about ──
+              md–lg: spans both columns as its own 2-col bento; xl+: a normal column */}
+          <div className="grid min-w-0 grid-cols-1 gap-12 md:col-span-2 md:grid-cols-2 md:gap-x-8 xl:col-span-1 xl:grid-cols-1">
+            {profile.skills?.length > 0 && (
+              <div className="resume-card md:row-span-2 xl:row-span-1">
+                <BentoCard label="Skills" labelColor="lightpink">
+                  <ul className="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-x-4 gap-y-3">
+                    {profile.skills.map((skill) => (
+                      <li key={skill} className="flex items-start gap-2 text-sm leading-snug text-text-secondary">
+                        <FaCheck className="mt-[0.3em] shrink-0 text-xs text-neon-green" aria-hidden="true" />
+                        <span>{skill}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </BentoCard>
+              </div>
+            )}
+
+            {profile.tools?.length > 0 && (
+              <div className="resume-card">
+                <BentoCard label="Tools" labelColor="pink">
+                  <ul className="grid grid-cols-4 gap-2">
+                    {profile.tools.map((tool, index) => (
+                      <li
+                        key={`${tool.name}-${index}`}
+                        title={tool.name}
+                        className="group flex h-14 items-center justify-center rounded-xl transition-colors hover:bg-white/5"
+                      >
+                        <span
+                          className="flex size-8 items-center justify-center transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-125"
+                          aria-hidden="true"
+                        >
+                          <ToolIcon tool={tool} />
+                        </span>
+                        <span className="sr-only">{tool.name}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </BentoCard>
+              </div>
+            )}
+
+            {profile.aboutQuote && (
+              <div className="resume-card">
+                <BentoCard label="About me!" labelColor="green">
+                  <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex gap-3 text-5xl" aria-hidden="true">
+                      <span>😍</span>
+                      <span>🐱</span>
+                    </div>
+                    <p className="min-w-[10rem] flex-1 text-base text-text-secondary italic">
+                      &ldquo;{profile.aboutQuote}&rdquo;
+                    </p>
+                  </div>
+                </BentoCard>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };

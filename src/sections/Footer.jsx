@@ -1,92 +1,105 @@
-const Footer = () => {
-  return (
-    <div>
-      <footer className="px-4 sm:px-8 md:px-12 lg:px-20 pb-10 md:pb-14 pt-12 md:pt-16">
-        <div className="mx-auto rounded-2xl border border-dashed border-white/20 bg-[#090D25]/80 backdrop-blur-sm overflow-hidden">
-          <div style={{ padding: "24px" }} className="sm:p-8 md:p-10">
-            {/* Top CTA section */}
-            <div className="pt-6 md:pt-8 pb-4 md:pb-6">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
-                {/* Left: text */}
-                <div className="max-w-xl">
-                  <p className="text-neon-green text-xs md:text-sm tracking-[0.22em] uppercase mb-3 font-medium">
-                    Let&apos;s Collaborate
-                  </p>
-                  <h3
-                    className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-[1.1] mb-4"
-                    style={{ fontFamily: "var(--font-family-primary)" }}
-                  >
-                    Build your next
-                    <br />
-                    <span className="text-neon-pink">standout product</span>
-                  </h3>
-                  <p className="text-text-secondary text-sm md:text-base leading-relaxed max-w-md">
-                    Open for product design, UX strategy, and end-to-end UI
-                    systems.
-                  </p>
-                </div>
+import { RiArrowUpLine } from 'react-icons/ri';
+import SocialIcon from '../components/SocialIcon';
+import { smoothScrollToTop } from '../lib/smoothScroll';
 
-                {/* Right: CTA + subtle info */}
-                <div className="flex flex-col items-start lg:items-end gap-4">
-                  <a
-                    href="mailto:uxwithkulsumr@gmail.com"
-                    className="group inline-flex items-center gap-3 px-7 py-4 rounded-xl bg-neon-green text-bg-primary text-sm md:text-base font-bold shadow-[0_8px_24px_rgba(190,255,70,0.35)] hover:shadow-[0_14px_36px_rgba(190,255,70,0.5)] hover:-translate-y-0.5 transition-all duration-300"
-                    data-cursor-text="Email"
-                  >
-                    <span>uxwithkulsumr@gmail.com</span>
-                    <svg
-                      className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M7 17L17 7M17 7H7M17 7v10"
-                      />
-                    </svg>
-                  </a>
-                  <p className="text-text-secondary text-xs tracking-wide">
-                    Usually responds within 24 hours
-                  </p>
-                </div>
-              </div>
+const scrollToTop = () => {
+  smoothScrollToTop();
+  document.getElementById('main-content')?.focus({ preventScroll: true });
+};
+
+const Footer = ({ profile }) => {
+  const email = profile?.email;
+  const links = [
+    profile?.linkedin && { label: 'LinkedIn', url: profile.linkedin },
+    ...(profile?.socials ?? []),
+  ].filter(Boolean);
+
+  return (
+    <footer id="site-footer" className="relative z-10 pt-8 pb-10 md:pt-12 md:pb-14">
+      <div className="container-page">
+        <div className="rounded-2xl border border-dashed border-white/20 bg-surface/80 p-6 backdrop-blur-sm sm:p-10 lg:p-12">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+            <div className="max-w-xl">
+              <p className="eyebrow mb-3 text-neon-green md:text-sm">Let&apos;s Collaborate</p>
+              <h2 className="mb-4 text-[clamp(1.875rem,5vw,3rem)] leading-[1.1] font-bold text-white">
+                Build your next
+                <br />
+                <span className="text-neon-pink">standout product</span>
+              </h2>
+              <p className="max-w-md text-sm leading-relaxed text-text-secondary md:text-base">
+                Open for product design, UX strategy, and end-to-end UI systems.
+              </p>
             </div>
 
-            {/* Divider */}
-            {/* <div className="border-t border-white/10" /> */}
-
-            {/* Bottom bar */}
-            <div className="px-4 md:px-6 pt-8 md:pt-12 pb-6 md:pb-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-text-secondary">
-              {/* Name / brand */}
-              <p className="font-medium tracking-wide text-white/50">
-                © 2025 <span className="text-white/80">Umme Kulsum Suriya</span>
-              </p>
-
-              {/* Nav links */}
-              {/* <nav className="flex items-center gap-6">
-              {['Home', 'Projects', 'Resume'].map((item) => (
+            <div className="flex min-w-0 flex-col items-start gap-3 lg:items-end">
+              {email ? (
                 <a
-                  key={item}
-                  href={`#${item.toLowerCase()}`}
-                  className="hover:text-white transition-colors duration-200 tracking-wide"
+                  href={`mailto:${email}`}
+                  className="group inline-flex max-w-full items-center gap-3 rounded-xl bg-neon-green px-5 py-3.5 text-sm font-bold text-bg-primary shadow-[0_8px_24px_rgb(190_255_70/0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_36px_rgb(190_255_70/0.5)] sm:px-7 sm:py-4 md:text-base"
+                  data-cursor-text="Email"
                 >
-                  {item}
+                  {/* <wbr> lets the address break after "@" on very narrow screens */}
+                  <span className="min-w-0 [overflow-wrap:anywhere]">
+                    {email.split('@')[0]}@<wbr />
+                    {email.split('@')[1]}
+                  </span>
+                  <svg
+                    className="size-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
+                  </svg>
                 </a>
-              ))}
-            </nav> */}
+              ) : (
+                <div className="skeleton h-13 w-64" aria-hidden="true" />
+              )}
+              {profile?.availability && <p className="text-xs tracking-wide text-text-secondary">{profile.availability}</p>}
 
-              {/* Role tag */}
-              <p className="tracking-wide text-white/40">
-                UX · UI · Product Design
-              </p>
+              {links.length > 0 && (
+                <ul className="mt-1 flex flex-wrap gap-2" aria-label="Elsewhere">
+                  {links.map((link) => (
+                    <li key={link.url}>
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="grid size-11 place-items-center rounded-xl border border-white/15 text-lg text-white/80 transition-colors duration-300 hover:border-neon-green/50 hover:text-neon-green"
+                        data-cursor-text={link.label}
+                      >
+                        <SocialIcon url={link.url} />
+                        <span className="sr-only">{link.label} (opens in a new tab)</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-text-secondary sm:flex-row sm:items-center md:mt-12">
+            <p className="font-medium tracking-wide text-white/60">
+              © {new Date().getFullYear()} <span className="text-white/85">{profile?.name ?? 'Umme Kulsum Suriya'}</span>
+            </p>
+            <div className="flex items-center gap-4">
+              <p className="tracking-wide text-white/60">UX · UI · Product Design</p>
+              <button
+                type="button"
+                onClick={scrollToTop}
+                className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 font-semibold text-white/80 transition-colors hover:text-neon-green"
+                data-cursor-text="Top"
+              >
+                <RiArrowUpLine aria-hidden="true" className="text-sm" />
+                Back to top
+              </button>
             </div>
           </div>
         </div>
-      </footer>
-    </div>
+      </div>
+    </footer>
   );
 };
 

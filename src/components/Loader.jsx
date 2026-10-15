@@ -1,141 +1,98 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useEffectEvent, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 
-const Loader = ({ onComplete }) => {
-  const loaderRef = useRef(null);
+/**
+ * First-visit intro. Rendered outside #root (portal) while #root is inert,
+ * so keyboard focus can't land on the hidden page underneath. Exits with a
+ * transform-only curtain lift (cheap on low-end phones).
+ *   onReveal   – the curtain starts lifting (start the hero animation)
+ *   onComplete – fully gone (unmount)
+ */
+const Loader = ({ name, role, onReveal, onComplete }) => {
+  const rootRef = useRef(null);
+  const contentRef = useRef(null);
   const nameRef = useRef(null);
-  const titleRef = useRef(null);
+  const roleRef = useRef(null);
   const counterRef = useRef(null);
   const lineRef = useRef(null);
 
+  const reveal = useEffectEvent(() => onReveal?.());
+  const complete = useEffectEvent(() => onComplete?.());
+
   useEffect(() => {
-    const tl = gsap.timeline({
-      onComplete: () => {
-        if (onComplete) onComplete();
-      },
-    });
+    const appRoot = document.getElementById('root');
+    if (appRoot) appRoot.inert = true;
 
-    // Counter animation
     const counter = { value: 0 };
-    tl.to(counter, {
-      value: 100,
-      duration: 2,
-      ease: 'power2.inOut',
-      onUpdate: () => {
-        if (counterRef.current) {
-          counterRef.current.textContent = Math.floor(counter.value) + '%';
-        }
-      },
-    });
-
-    // Line width animation
+    const tl = gsap.timeline({ onComplete: () => complete() });
     tl.to(
-      lineRef.current,
+      counter,
       {
-        width: '100%',
-        duration: 2,
+        value: 100,
+        duration: 1.4,
         ease: 'power2.inOut',
+        onUpdate: () => {
+          if (counterRef.current) counterRef.current.textContent = `${Math.round(counter.value)}%`;
+        },
       },
-      0
-    );
+      0,
+    )
+      .to(lineRef.current, { scaleX: 1, duration: 1.4, ease: 'power2.inOut' }, 0)
+      .fromTo(nameRef.current, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.15)
+      .fromTo(roleRef.current, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0.35)
+      // quick glitch before the exit
+      .to(nameRef.current, { skewX: 5, duration: 0.08, ease: 'power4.inOut' }, 1.45)
+      .to(nameRef.current, { skewX: -3, duration: 0.06, ease: 'power4.inOut' })
+      .to(nameRef.current, { skewX: 0, duration: 0.08, ease: 'power4.inOut' })
+      .to(contentRef.current, { y: -24, opacity: 0, duration: 0.35, ease: 'power2.in' }, 1.65)
+      .call(() => reveal(), [], 1.8)
+      .to(rootRef.current, { yPercent: -100, duration: 0.75, ease: 'power4.inOut' }, 1.8);
 
-    // Name reveal
-    tl.fromTo(
-      nameRef.current,
-      { y: 40, opacity: 0, filter: 'blur(10px)' },
-      { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' },
-      0.3
-    );
+    return () => {
+      tl.kill();
+      if (appRoot) appRoot.inert = false;
+    };
+  }, []);
 
-    // Title reveal
-    tl.fromTo(
-      titleRef.current,
-      { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' },
-      0.6
-    );
+  const [first, ...rest] = name.split(' ');
+  const last = rest.pop();
 
-    // Glitch effect
-    tl.to(nameRef.current, {
-      skewX: 5,
-      duration: 0.1,
-      ease: 'power4.inOut',
-    }, 2.2);
-    tl.to(nameRef.current, {
-      skewX: -3,
-      duration: 0.08,
-      ease: 'power4.inOut',
-    });
-    tl.to(nameRef.current, {
-      skewX: 0,
-      duration: 0.1,
-      ease: 'power4.inOut',
-    });
+  return createPortal(
+    <div ref={rootRef} className="loader-container overflow-hidden" role="status">
+      <span className="sr-only">Loading the portfolio</span>
+      <div className="absolute inset-0 bg-gradient-to-br from-bg-primary via-bg-secondary to-bg-tertiary" aria-hidden="true" />
+      <div className="grid-overlay" aria-hidden="true" />
 
-    // Fade out entire loader
-    tl.to(loaderRef.current, {
-      opacity: 0,
-      scale: 1.05,
-      filter: 'blur(10px)',
-      duration: 0.8,
-      ease: 'power3.inOut',
-    }, 2.6);
-
-    tl.set(loaderRef.current, { display: 'none' });
-
-    return () => tl.kill();
-  }, [onComplete]);
-
-  return (
-    <div ref={loaderRef} className="loader-container">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#070816] via-[#0B1023] to-[#10142B]" />
-
-      {/* Grid overlay */}
-      <div className="grid-overlay" />
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center gap-4">
-        <h1
-          ref={nameRef}
-          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight opacity-0"
-          style={{ fontFamily: 'var(--font-family-primary)' }}
-        >
-          <span className="text-white">Umme Kulsum</span>{' '}
-          <span className="text-neon-green">Suriya</span>
-        </h1>
-
-        <p
-          ref={titleRef}
-          className="text-text-secondary text-sm md:text-base tracking-[0.3em] uppercase opacity-0"
-        >
-          UX-UI Designer
+      <div ref={contentRef} className="relative z-10 flex flex-col items-center gap-4 px-6 text-center" aria-hidden="true">
+        <p ref={nameRef} className="text-4xl font-bold tracking-tight opacity-0 md:text-6xl lg:text-7xl">
+          <span className="text-white">{[first, ...rest].join(' ')}</span>{' '}
+          {last && <span className="text-neon-green">{last}</span>}
+        </p>
+        <p ref={roleRef} className="text-sm tracking-[0.3em] text-text-secondary uppercase opacity-0 md:text-base">
+          {role}
         </p>
 
-        {/* Progress bar */}
         <div className="mt-8 w-48 md:w-64">
-          <div className="h-[1px] bg-white/10 relative overflow-hidden rounded-full">
+          <div className="relative h-px overflow-hidden rounded-full bg-white/10">
             <div
               ref={lineRef}
-              className="h-full bg-gradient-to-r from-neon-green via-neon-pink to-neon-purple"
-              style={{ width: '0%' }}
+              className="h-full origin-left scale-x-0 bg-gradient-to-r from-neon-green via-neon-pink to-neon-purple"
             />
           </div>
-          <p
-            ref={counterRef}
-            className="text-text-muted text-xs mt-3 text-center font-mono tracking-widest"
-          >
+          <p ref={counterRef} className="mt-3 text-center font-mono text-xs tracking-widest text-text-muted">
             0%
           </p>
         </div>
       </div>
 
       {/* Corner decorations */}
-      <div className="absolute top-6 left-6 w-8 h-8 border-l border-t border-neon-purple/30" />
-      <div className="absolute top-6 right-6 w-8 h-8 border-r border-t border-neon-purple/30" />
-      <div className="absolute bottom-6 left-6 w-8 h-8 border-l border-b border-neon-purple/30" />
-      <div className="absolute bottom-6 right-6 w-8 h-8 border-r border-b border-neon-purple/30" />
-    </div>
+      <div className="absolute top-6 left-6 size-8 border-t border-l border-neon-purple/30" aria-hidden="true" />
+      <div className="absolute top-6 right-6 size-8 border-t border-r border-neon-purple/30" aria-hidden="true" />
+      <div className="absolute bottom-6 left-6 size-8 border-b border-l border-neon-purple/30" aria-hidden="true" />
+      <div className="absolute right-6 bottom-6 size-8 border-r border-b border-neon-purple/30" aria-hidden="true" />
+    </div>,
+    document.body,
   );
 };
 

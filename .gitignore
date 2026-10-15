@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Environment files hold database credentials — never commit them.
+.env
+.env.*
+!.env.example
+
+# Vercel CLI
+.vercel
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
